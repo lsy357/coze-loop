@@ -9,12 +9,24 @@ body:
       value: |
         Thanks for taking the time to suggest a feature for Coze Loop!
 
-        **Please ensure that:**
-        - [ ] You have searched existing issues to avoid duplicates
-        - [ ] You have provided a clear use case and benefit
-        - [ ] You understand this is a feature request, not a bug report
-
         **Note:** All feature requests must be submitted in English.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: "📋 Please ensure that:"
+      description: "Please confirm the following requirements:"
+      options:
+        - label: "I have searched existing issues to avoid duplicates"
+          required: true
+        - label: "I have provided a clear problem statement and solution"
+          required: true
+        - label: "I understand this is a feature request and not a bug report"
+          required: true
+        - label: "I am willing to help implement this feature if needed"
+          required: false
+        - label: "I have submitted this feature request in English (otherwise it will not be processed)"
+          required: true
 
   - type: textarea
     id: problem-description
@@ -117,20 +129,3 @@ body:
       label: "📝 Additional Context"
       description: "Add any other context or screenshots about the feature request here."
       placeholder: "Any additional information that might be helpful..."
-
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: "📋 Checklist"
-      description: "Please confirm the following:"
-      options:
-        - label: "I have searched existing issues to avoid duplicates"
-          required: true
-        - label: "I have provided a clear problem statement and solution"
-          required: true
-        - label: "I understand this is a feature request and not a bug report"
-          required: true
-        - label: "I am willing to help implement this feature if needed"
-          required: false
-        - label: "I have submitted this feature request in English (otherwise it will not be processed)"
-          required: true
