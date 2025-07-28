@@ -22,7 +22,6 @@ body:
       label: "🐛 Bug Description"
       description: "A clear and concise description of what the bug is."
       placeholder: "Describe the bug you encountered..."
-      value: ""
     validations:
       required: true
 
@@ -36,7 +35,6 @@ body:
         2. Click on '....'
         3. Scroll down to '....'
         4. See error
-      value: ""
     validations:
       required: true
 
@@ -46,7 +44,6 @@ body:
       label: "✅ Expected Behavior"
       description: "A clear and concise description of what you expected to happen."
       placeholder: "Describe what you expected to happen..."
-      value: ""
     validations:
       required: true
 
@@ -56,7 +53,6 @@ body:
       label: "❌ Actual Behavior"
       description: "A clear and concise description of what actually happened."
       placeholder: "Describe what actually happened..."
-      value: ""
     validations:
       required: true
 
@@ -101,7 +97,6 @@ body:
         **Browser:** [e.g. Chrome 120.0, Firefox 121.0] (if applicable)
         **Coze Loop Version:** [e.g. v1.0.0, commit hash, or "latest"]
         **Model Configuration:** [e.g. OpenAI GPT-4, Volcengine Ark]
-      value: ""
     validations:
       required: false
 
@@ -111,7 +106,6 @@ body:
       label: "🔧 Go Environment"
       description: "Output of `go env` command"
       placeholder: "Paste the output of 'go env' here..."
-      value: ""
 
   - type: textarea
     id: logs
@@ -123,7 +117,6 @@ body:
         [Paste logs here]
         ```
       render: shell
-      value: ""
 
   - type: textarea
     id: additional-context
@@ -131,7 +124,6 @@ body:
       label: "📝 Additional Context"
       description: "Add any other context about the problem here."
       placeholder: "Any additional information that might be helpful..."
-      value: ""
 
   - type: checkboxes
     id: terms

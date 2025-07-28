@@ -22,7 +22,6 @@ body:
       label: "🎯 Problem Statement"
       description: "Is your feature request related to a problem? Please describe."
       placeholder: "I'm always frustrated when [...]"
-      value: ""
     validations:
       required: true
 
@@ -32,7 +31,6 @@ body:
       label: "💡 Proposed Solution"
       description: "A clear and concise description of what you want to happen."
       placeholder: "Describe the solution you'd like to see implemented..."
-      value: ""
     validations:
       required: true
 
@@ -45,7 +43,6 @@ body:
         - Use case 1: [Description]
         - Use case 2: [Description]
         - Use case 3: [Description]
-      value: ""
     validations:
       required: true
 
@@ -84,7 +81,6 @@ body:
       label: "🔄 Alternatives Considered"
       description: "A clear and concise description of any alternative solutions or features you've considered."
       placeholder: "Describe any alternative solutions you've considered..."
-      value: ""
 
   - type: textarea
     id: mockups
@@ -92,7 +88,6 @@ body:
       label: "🎨 Mockups/Designs"
       description: "If applicable, add mockups, wireframes, or design concepts."
       placeholder: "Add mockups, screenshots, or design concepts here..."
-      value: ""
 
   - type: textarea
     id: technical-details
@@ -105,7 +100,6 @@ body:
         - Frontend components
         - Backend services
         - Integration points
-      value: ""
 
   - type: textarea
     id: acceptance-criteria
@@ -116,7 +110,6 @@ body:
         - [ ] Criterion 1
         - [ ] Criterion 2
         - [ ] Criterion 3
-      value: ""
 
   - type: textarea
     id: additional-context
@@ -124,7 +117,6 @@ body:
       label: "📝 Additional Context"
       description: "Add any other context or screenshots about the feature request here."
       placeholder: "Any additional information that might be helpful..."
-      value: ""
 
   - type: checkboxes
     id: terms
