@@ -26,12 +26,27 @@ import (
 	"github.com/coze-dev/coze-loop/backend/pkg/logs"
 )
 
+func NewUserApplication(
+	userService service.IUserService,
+	configFactory conf.IConfigLoaderFactory,
+) (user.UserService, error) {
+	ua := &UserApplicationImpl{
+		userService:        userService,
+		registerController: userRegisterController{},
+	}
+	if loader, err := configFactory.NewConfigLoader("foundation.yaml"); err == nil {
+		ua.registerController.configLoader = loader
+	}
+	return ua, nil
+}
+
 type UserApplicationImpl struct {
 	userService        service.IUserService
 	registerController userRegisterController
 }
 
 type userRegisterController struct {
+	// configLoader weak dependency, might be nil
 	configLoader conf.IConfigLoader
 }
 
@@ -41,8 +56,11 @@ type userRegisterControlConfig struct {
 }
 
 func (u *userRegisterController) allowRegister(ctx context.Context, email string) bool {
-	const keyUserRegisterControl = "user_register_control"
+	if u.configLoader == nil {
+		return true
+	}
 
+	const keyUserRegisterControl = "user_register_control"
 	var config userRegisterControlConfig
 	if err := u.configLoader.UnmarshalKey(ctx, keyUserRegisterControl, &config); err != nil {
 		logs.CtxWarn(ctx, "load user_register_control config fail, err: %v", err)
@@ -53,22 +71,6 @@ func (u *userRegisterController) allowRegister(ctx context.Context, email string
 		return true
 	}
 	return slices.Contains(config.AllowedEmails, email)
-}
-
-func NewUserApplication(
-	userService service.IUserService,
-	configFactory conf.IConfigLoaderFactory,
-) (user.UserService, error) {
-	loader, err := configFactory.NewConfigLoader("foundation.yaml")
-	if err != nil {
-		return nil, err
-	}
-	return &UserApplicationImpl{
-		userService: userService,
-		registerController: userRegisterController{
-			configLoader: loader,
-		},
-	}, nil
 }
 
 func (u *UserApplicationImpl) Register(ctx context.Context, request *user.UserRegisterRequest) (r *user.UserRegisterResponse, err error) {
