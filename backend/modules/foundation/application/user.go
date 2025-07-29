@@ -7,6 +7,7 @@ import (
 	"context"
 	"net/mail"
 	"strconv"
+	"strings"
 
 	"github.com/bytedance/gg/gptr"
 	"github.com/bytedance/gg/gslice"
@@ -51,8 +52,8 @@ type userRegisterController struct {
 }
 
 type userRegisterControlConfig struct {
-	Block         bool     `mapstructure:"block"`
-	AllowedEmails []string `mapstructure:"allowed_emails"`
+	Block         bool   `mapstructure:"block"`
+	AllowedEmails string `mapstructure:"allowed_emails"`
 }
 
 func (u *userRegisterController) allowRegister(ctx context.Context, email string) bool {
@@ -70,7 +71,7 @@ func (u *userRegisterController) allowRegister(ctx context.Context, email string
 	if !config.Block {
 		return true
 	}
-	return slices.Contains(config.AllowedEmails, email)
+	return slices.Contains(strings.Split(config.AllowedEmails, ";"), email)
 }
 
 func (u *UserApplicationImpl) Register(ctx context.Context, request *user.UserRegisterRequest) (r *user.UserRegisterResponse, err error) {

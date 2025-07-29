@@ -76,7 +76,7 @@ func Test_userRegisterController_allowRegister(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = false
-						config.AllowedEmails = []string{}
+						config.AllowedEmails = ""
 						return nil
 					})
 				return fields{
@@ -96,7 +96,7 @@ func Test_userRegisterController_allowRegister(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = true
-						config.AllowedEmails = []string{"test@example.com", "admin@example.com"}
+						config.AllowedEmails = "test@example.com;admin@example.com"
 						return nil
 					})
 				return fields{
@@ -116,7 +116,7 @@ func Test_userRegisterController_allowRegister(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = true
-						config.AllowedEmails = []string{"admin@example.com", "allowed@example.com"}
+						config.AllowedEmails = "admin@example.com;allowed@example.com"
 						return nil
 					})
 				return fields{
@@ -136,7 +136,7 @@ func Test_userRegisterController_allowRegister(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = true
-						config.AllowedEmails = []string{}
+						config.AllowedEmails = ""
 						return nil
 					})
 				return fields{
@@ -236,7 +236,7 @@ func TestUserApplicationImpl_validateRegisterReq(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = true
-						config.AllowedEmails = []string{"admin@example.com"}
+						config.AllowedEmails = "admin@example.com"
 						return nil
 					})
 				return fields{
@@ -262,7 +262,7 @@ func TestUserApplicationImpl_validateRegisterReq(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = false
-						config.AllowedEmails = []string{}
+						config.AllowedEmails = ""
 						return nil
 					})
 				return fields{
@@ -448,7 +448,7 @@ func TestUserApplicationImpl_Register(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = true
-						config.AllowedEmails = []string{"admin@example.com"}
+						config.AllowedEmails = "admin@example.com"
 						return nil
 					})
 				return fields{
@@ -475,7 +475,7 @@ func TestUserApplicationImpl_Register(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = false
-						config.AllowedEmails = []string{}
+						config.AllowedEmails = ""
 						return nil
 					})
 				mockService := servicemocks.NewMockIUserService(ctrl)
@@ -507,7 +507,7 @@ func TestUserApplicationImpl_Register(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = false
-						config.AllowedEmails = []string{}
+						config.AllowedEmails = ""
 						return nil
 					})
 				mockService := servicemocks.NewMockIUserService(ctrl)
@@ -540,7 +540,7 @@ func TestUserApplicationImpl_Register(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = false
-						config.AllowedEmails = []string{}
+						config.AllowedEmails = ""
 						return nil
 					})
 				mockService := servicemocks.NewMockIUserService(ctrl)
@@ -577,7 +577,7 @@ func TestUserApplicationImpl_Register(t *testing.T) {
 				mockLoader.EXPECT().UnmarshalKey(gomock.Any(), "user_register_control", gomock.Any()).
 					DoAndReturn(func(ctx context.Context, key string, config *userRegisterControlConfig, opts ...conf.DecodeOptionFn) error {
 						config.Block = true
-						config.AllowedEmails = []string{"test@example.com", "admin@example.com"}
+						config.AllowedEmails = "test@example.com;admin@example.com"
 						return nil
 					})
 				mockService := servicemocks.NewMockIUserService(ctrl)
