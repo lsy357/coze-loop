@@ -8,6 +8,7 @@ import (
 	"net/mail"
 	"strconv"
 
+	"github.com/bytedance/gg/gptr"
 	"github.com/bytedance/gg/gslice"
 
 	"github.com/coze-dev/coze-loop/backend/infra/middleware/session"
@@ -17,31 +18,62 @@ import (
 	"github.com/coze-dev/coze-loop/backend/modules/foundation/domain/user/entity"
 	"github.com/coze-dev/coze-loop/backend/modules/foundation/domain/user/service"
 	"github.com/coze-dev/coze-loop/backend/modules/foundation/pkg/errno"
+	"github.com/coze-dev/coze-loop/backend/pkg/conf"
 	"github.com/coze-dev/coze-loop/backend/pkg/errorx"
 	"github.com/coze-dev/coze-loop/backend/pkg/lang/conv"
 	"github.com/coze-dev/coze-loop/backend/pkg/lang/ptr"
 	"github.com/coze-dev/coze-loop/backend/pkg/lang/slices"
+	"github.com/coze-dev/coze-loop/backend/pkg/logs"
 )
 
 type UserApplicationImpl struct {
-	userService service.IUserService
+	userService        service.IUserService
+	registerController userRegisterController
+}
+
+type userRegisterController struct {
+	configLoader conf.IConfigLoader
+}
+
+type userRegisterControlConfig struct {
+	Block         bool     `mapstructure:"block"`
+	AllowedEmails []string `mapstructure:"allowed_emails"`
+}
+
+func (u *userRegisterController) allowRegister(ctx context.Context, email string) bool {
+	const keyUserRegisterControl = "user_register_control"
+
+	var config userRegisterControlConfig
+	if err := u.configLoader.UnmarshalKey(ctx, keyUserRegisterControl, &config); err != nil {
+		logs.CtxWarn(ctx, "load user_register_control config fail, err: %v", err)
+		return false
+	}
+
+	if !config.Block {
+		return true
+	}
+	return slices.Contains(config.AllowedEmails, email)
 }
 
 func NewUserApplication(
 	userService service.IUserService,
-) user.UserService {
+	configFactory conf.IConfigLoaderFactory,
+) (user.UserService, error) {
+	loader, err := configFactory.NewConfigLoader("foundation.yaml")
+	if err != nil {
+		return nil, err
+	}
 	return &UserApplicationImpl{
 		userService: userService,
-	}
+		registerController: userRegisterController{
+			configLoader: loader,
+		},
+	}, nil
 }
 
 func (u *UserApplicationImpl) Register(ctx context.Context, request *user.UserRegisterRequest) (r *user.UserRegisterResponse, err error) {
-	if request.Email == nil || request.Password == nil {
-		return nil, errorx.NewByCode(errno.CommonInvalidParamCode)
-	}
-
-	if _, err = mail.ParseAddress(*request.Email); err != nil {
-		return nil, errorx.NewByCode(errno.CommonInvalidParamCode, errorx.WithExtraMsg("email is invalid"))
+	if err := u.validateRegisterReq(ctx, request); err != nil {
+		return nil, err
 	}
 
 	userDO, err := u.userService.Create(ctx, &service.CreateUserRequest{
@@ -64,6 +96,22 @@ func (u *UserApplicationImpl) Register(ctx context.Context, request *user.UserRe
 	}
 
 	return r, nil
+}
+
+func (u *UserApplicationImpl) validateRegisterReq(ctx context.Context, request *user.UserRegisterRequest) error {
+	if request.Email == nil || request.Password == nil {
+		return errorx.NewByCode(errno.CommonInvalidParamCode)
+	}
+
+	if _, err := mail.ParseAddress(gptr.Indirect(request.Email)); err != nil {
+		return errorx.NewByCode(errno.CommonInvalidParamCode, errorx.WithExtraMsg("email is invalid"))
+	}
+
+	if !u.registerController.allowRegister(ctx, request.GetEmail()) {
+		return errorx.NewByCode(errno.UserRegistrationControlBlockCode)
+	}
+
+	return nil
 }
 
 func (u *UserApplicationImpl) ResetPassword(ctx context.Context, request *user.ResetPasswordRequest) (r *user.ResetPasswordResponse, err error) {

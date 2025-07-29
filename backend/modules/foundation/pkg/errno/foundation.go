@@ -79,6 +79,10 @@ const (
 	AccountOverdraftCodeCode              = 602002007
 	accountOverdraftCodeMessage           = "account overdraft"
 	accountOverdraftCodeNoAffectStability = true
+
+	UserRegistrationControlBlockCode              = 602002008
+	userRegistrationControlBlockMessage           = "user registration control block"
+	userRegistrationControlBlockNoAffectStability = true
 )
 
 func init() {
@@ -189,6 +193,12 @@ func init() {
 		AccountOverdraftCodeCode,
 		accountOverdraftCodeMessage,
 		code.WithAffectStability(!accountOverdraftCodeNoAffectStability),
+	)
+
+	code.Register(
+		UserRegistrationControlBlockCode,
+		userRegistrationControlBlockMessage,
+		code.WithAffectStability(!userRegistrationControlBlockNoAffectStability),
 	)
 
 }
