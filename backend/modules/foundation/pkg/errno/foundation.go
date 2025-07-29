@@ -81,7 +81,7 @@ const (
 	accountOverdraftCodeNoAffectStability = true
 
 	UserRegistrationControlBlockCode              = 602002008
-	userRegistrationControlBlockMessage           = "user registration control block"
+	userRegistrationControlBlockMessage           = "email address is restricted from registration based on account security protocols"
 	userRegistrationControlBlockNoAffectStability = true
 )
 
