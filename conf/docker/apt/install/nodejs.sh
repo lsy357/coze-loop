@@ -2,11 +2,19 @@
 
 set -ex
 
+ARCH="$(uname -m)"
+case "$ARCH" in
+  x86_64) NODE_ARCH="x64" ;;
+  aarch64) NODE_ARCH="arm64" ;;
+  *) echo "Unsupported architecture: $ARCH"; exit 1 ;;
+esac
+
+NODE_VERSION="v20.13.1"
 cd /tmp
-curl -LO https://nodejs.org/dist/v20.13.1/node-v20.13.1-linux-x64.tar.xz
-tar -xJf node-v20.13.1-linux-x64.tar.xz
-mv node-v20.13.1-linux-x64 /usr/local/nodejs
-rm node-v20.13.1-linux-x64.tar.xz
+curl -LO "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"
+tar -xJf "node-${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"
+mv "node-${NODE_VERSION}-linux-${NODE_ARCH}" /usr/local/nodejs
+rm "node-${NODE_VERSION}-linux-${NODE_ARCH}.tar.xz"
 
 ln -s /usr/local/nodejs/bin/node /usr/bin/node
 ln -s /usr/local/nodejs/bin/npm /usr/bin/npm
