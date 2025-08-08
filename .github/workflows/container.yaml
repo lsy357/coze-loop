@@ -77,7 +77,30 @@ jobs:
         run: |
           mkdir -p ${{ runner.temp }}/digests
           digest="${{ steps.build.outputs.digest }}"
-          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+          # Debug: Print digest value
+          echo "Digest value: '$digest'"
+
+          # Check if digest is empty
+          if [ -z "$digest" ]; then
+            echo "Error: Digest is empty"
+            exit 1
+          fi
+
+          # Remove sha256: prefix if present
+          if [[ "$digest" == sha256:* ]]; then
+            digest_clean="${digest#sha256:}"
+          else
+            digest_clean="$digest"
+          fi
+
+          echo "Clean digest: '$digest_clean'"
+
+          # Create the digest file
+          touch "${{ runner.temp }}/digests/$digest_clean"
+
+          # Verify file was created
+          ls -la "${{ runner.temp }}/digests/"
 
       - name: Upload digest
         uses: actions/upload-artifact@v4
