@@ -55,20 +55,17 @@ jobs:
           # Set build platform for docker compose
           export DOCKER_DEFAULT_PLATFORM=${{ matrix.platform }}
 
-          # Build using docker compose with specific service
-          docker compose build app
-
-          # Get the image ID
-          IMAGE_ID=$(docker compose images -q app)
-
-          # Tag the image with registry name
-          docker tag $IMAGE_ID ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
-
-          # Push the image
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
+          # Build using docker buildx directly for better reliability
+          docker buildx build \
+            --platform ${{ matrix.platform }} \
+            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }} \
+            --push \
+            --cache-from type=gha \
+            --cache-to type=gha,mode=max \
+            .
 
           # Get the digest
-          DIGEST=$(docker inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }} --format='{{.RepoDigests}}' | cut -d'@' -f2)
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }} --format '{{.Manifest.Digest}}' | cut -d'@' -f2)
 
           # Save digest for later use
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
