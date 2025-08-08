@@ -5,7 +5,7 @@ on:
     branches:
       - main
   release:
-    types: [ published ]
+    types: [published]
   workflow_dispatch:
 
 env:
@@ -52,8 +52,11 @@ jobs:
       - name: Build and push by digest using docker-compose
         id: build
         run: |
-          # Build using docker compose with platform override
-          docker compose build --platform ${{ matrix.platform }} app
+          # Set build platform for docker compose
+          export DOCKER_DEFAULT_PLATFORM=${{ matrix.platform }}
+
+          # Build using docker compose with specific service
+          docker compose build app
 
           # Get the image ID
           IMAGE_ID=$(docker compose images -q app)
