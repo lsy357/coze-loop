@@ -55,17 +55,20 @@ jobs:
           # Set build platform for docker compose
           export DOCKER_DEFAULT_PLATFORM=${{ matrix.platform }}
 
+          # Convert platform to valid tag format (replace / with -)
+          PLATFORM_TAG=${matrix.platform//\//-}
+
           # Build using docker buildx directly for better reliability
           docker buildx build \
             --platform ${{ matrix.platform }} \
-            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }} \
+            --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$PLATFORM_TAG \
             --push \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             .
 
           # Get the digest
-          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }} --format '{{.Manifest.Digest}}' | cut -d'@' -f2)
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$PLATFORM_TAG --format '{{.Manifest.Digest}}' | cut -d'@' -f2)
 
           # Save digest for later use
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
