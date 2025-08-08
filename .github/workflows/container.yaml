@@ -67,8 +67,8 @@ jobs:
             --cache-to type=gha,mode=max \
             .
 
-          # Get the digest
-          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$PLATFORM_TAG --format '{{.Manifest.Digest}}' | cut -d'@' -f2)
+          # Get the digest using a more reliable method
+          DIGEST=$(docker buildx imagetools inspect ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$PLATFORM_TAG --format '{{.Descriptor.Digest}}' | head -1)
 
           # Save digest for later use
           echo "digest=$DIGEST" >> $GITHUB_OUTPUT
