@@ -49,17 +49,17 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push by digest using docker-compose
+            - name: Build and push by digest using docker-compose
         id: build
         run: |
-          # Set build platform for docker-compose
+          # Set build platform for docker compose
           export DOCKER_DEFAULT_PLATFORM=${{ matrix.platform }}
 
-          # Build using docker-compose with specific service
-          docker-compose build app
+          # Build using docker compose with specific service
+          docker compose build app
 
           # Get the image ID
-          IMAGE_ID=$(docker-compose images -q app)
+          IMAGE_ID=$(docker compose images -q app)
 
           # Tag the image with registry name
           docker tag $IMAGE_ID ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ matrix.platform }}
