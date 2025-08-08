@@ -49,7 +49,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-            - name: Build and push by digest using docker-compose
+      - name: Build and push by digest using docker-compose
         id: build
         run: |
           # Set build platform for docker compose
