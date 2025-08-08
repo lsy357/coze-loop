@@ -56,7 +56,7 @@ jobs:
           export DOCKER_DEFAULT_PLATFORM=${{ matrix.platform }}
 
           # Convert platform to valid tag format (replace / with -)
-          PLATFORM_TAG=${matrix.platform//\//-}
+          PLATFORM_TAG=$(echo "${{ matrix.platform }}" | tr '/' '-')
 
           # Build using docker buildx directly for better reliability
           docker buildx build \
